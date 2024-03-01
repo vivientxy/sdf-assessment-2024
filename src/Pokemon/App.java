@@ -6,19 +6,42 @@ import java.util.List;
 import java.util.Map;
 
 public class App {
-    private static List<String> pokemonStack;
+    private static List<String> currentStack;
     private static Map<Integer, List<String>> pokemonStacks;
 
     public static void main(String[] args) throws Exception {
         Console cons = System.console();
 
-        String csvDir = args[0];
-        FileService fs = new FileService();
-        fs.ReadCSV(csvDir);
+        // String csvDir = args[0];
+        // FileService fs = new FileService();
+        // fs.ReadCSV(csvDir);
+
+        // try-catch exceptions instead of throw!
 
         // Run Your Code here
         printHeader();
         String selection = cons.readLine("Enter your selection >");
+        switch (selection.toLowerCase()) {
+            case "1":
+                
+                break;
+            case "2":
+                
+                break;
+            case "3":
+                
+                break;
+            case "4":
+                String pokemonStackString = cons.readLine("Create a new Pokemon stack and save to a new file >\n");
+                String filename = cons.readLine("Enter filename to save (e.g. path/filename.csv) >\n");
+                savePokemonStack(pokemonStackString, filename);
+                break;
+            case "q":
+                printExitMessage();
+                break;
+            default:
+                break;
+        }
 
     }
 
@@ -44,14 +67,14 @@ public class App {
 
     // Task 1
     public static void printExitMessage() {
-
-        // Task 1 - your code here
+        System.out.println("\nThank you for using the program..." + "\n"
+        + "Hope to see you soon...");
     }
 
     // Task 1
-    public static void savePokemonStack(String pokemonStack, String filename) {
-
-        // Task 1 - your code here
+    public static void savePokemonStack(String pokemonStack, String filename) throws IOException {
+        FileService fs = new FileService();
+        fs.writeAsCSV(pokemonStack, filename);
     }
 
     // Task 2
