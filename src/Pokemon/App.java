@@ -9,7 +9,7 @@ public class App {
     private static List<String> currentStack;
     private static Map<Integer, List<String>> pokemonStacks;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         Console cons = System.console();
 
         // String csvDir = args[0];
@@ -19,28 +19,50 @@ public class App {
         // try-catch exceptions instead of throw!
 
         // Run Your Code here
-        printHeader();
-        String selection = cons.readLine("Enter your selection >");
-        switch (selection.toLowerCase()) {
-            case "1":
-                
-                break;
-            case "2":
-                
-                break;
-            case "3":
-                
-                break;
-            case "4":
-                String pokemonStackString = cons.readLine("Create a new Pokemon stack and save to a new file >\n");
-                String filename = cons.readLine("Enter filename to save (e.g. path/filename.csv) >\n");
-                savePokemonStack(pokemonStackString, filename);
-                break;
-            case "q":
-                printExitMessage();
-                break;
-            default:
-                break;
+        boolean gameOn = true;
+
+        while (gameOn) {
+            clearConsole();
+            printHeader();
+            String selection = cons.readLine("Enter your selection >");
+            switch (selection.toLowerCase()) {
+                case "1":
+                    String stackChoiceString = cons.readLine("Display the list of unique Pokemon in stack (1-8) >\n");
+                    try {
+                        // check for valid selection
+                        int choice = Integer.parseInt(stackChoiceString);
+                        if (choice < 1 || choice > 8) {
+                            System.out.println("Please enter a valid number between 1 and 8.");
+                        }
+                        // valid selection
+                        else {
+                            printUniquePokemonStack(choice);
+                        }
+                    } catch (NumberFormatException nfe) {
+                        System.out.println("Error! Please enter a valid number between 1 and 8.");
+                    }
+                    pressAnyKeyToContinue();
+                    break;
+                case "2":
+
+                    pressAnyKeyToContinue();
+                    break;
+                case "3":
+
+                    pressAnyKeyToContinue();
+                    break;
+                case "4":
+                    String pokemonStackString = cons.readLine("Create a new Pokemon stack and save to a new file >\n");
+                    String filename = cons.readLine("Enter filename to save (e.g. path/filename.csv) >\n");
+                    savePokemonStack(pokemonStackString, filename);
+                    break;
+                case "q":
+                    printExitMessage();
+                    gameOn = false;
+                    break;
+                default:
+                    break;
+            }
         }
 
     }
@@ -52,23 +74,24 @@ public class App {
 
     // Task 1
     public static void pressAnyKeyToContinue() {
-        // your code here
+        Console cons = System.console();
+        cons.readLine("Press any key to continue...");
     }
 
     // Task 1
     public static void printHeader() {
         System.out.println("Welcome to Pokemon Gaole Legend 4 Rush 2" + "\n\n"
-        + "(1) View the list of Pokemon in the selected stack" + "\n"
-        + "(2) View unique list of Pokemon in the selected stack and cards count" + "\n"
-        + "(3) Find next 5 stars Pokemon occurrence" + "\n"
-        + "(4) Create new Pokemon stack and save (append) to csv file" + "\n"
-        + "(q) to exit the program");
+                + "(1) View the list of Pokemon in the selected stack" + "\n"
+                + "(2) View unique list of Pokemon in the selected stack and cards count" + "\n"
+                + "(3) Find next 5 stars Pokemon occurrence" + "\n"
+                + "(4) Create new Pokemon stack and save (append) to csv file" + "\n"
+                + "(q) to exit the program");
     }
 
     // Task 1
     public static void printExitMessage() {
         System.out.println("\nThank you for using the program..." + "\n"
-        + "Hope to see you soon...");
+                + "Hope to see you soon...");
     }
 
     // Task 1
