@@ -1,19 +1,15 @@
 package Pokemon;
 
+import java.io.Console;
 import java.io.IOException;
 
 public class App {
 
     public static void main(String[] args) throws Exception {
-
+        Console cons = System.console();
         // Run Your Code here
-
-        System.out.println("Welcome to Pokemon Gaole Legend 4 Rush 2" + "/n/n"
-                + "(1) View unique list of Pokemon in the selected stack" + "/n"
-                + "(2) Find next 5 stars Pokemon occurrence" + "/n"
-                + "(3) Create new Pokemon stack and save (append) to csv file" + "/n"
-                + "(4) Print distinct Pokemon and cards count" + "/n"
-                + "(q) to exit the program");
+        printHeader();
+        String selection = cons.readLine("Enter your selection >");
 
     }
 
@@ -29,8 +25,12 @@ public class App {
 
     // Task 1
     public static void printHeader() {
-
-        // Task 1 - your code here
+        System.out.println("Welcome to Pokemon Gaole Legend 4 Rush 2" + "\n\n"
+        + "(1) View unique list of Pokemon in the selected stack" + "\n"
+        + "(2) Find next 5 stars Pokemon occurrence" + "\n"
+        + "(3) Create new Pokemon stack and save (append) to csv file" + "\n"
+        + "(4) Print distinct Pokemon and cards count" + "\n"
+        + "(q) to exit the program");
     }
 
     // Task 1
