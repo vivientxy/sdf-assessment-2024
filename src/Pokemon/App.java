@@ -15,79 +15,83 @@ public class App {
     public static List<String> listOfPokemonStacks = new ArrayList<>();
     public static Map<Integer, List<String>> pokemonStacksMap = new HashMap<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Console cons = System.console();
-
-        // try-catch exceptions instead of throw!
-
-        // to fix this -- terminate program if no filepath is passed in command line argument
-        String csvDir = "Rush2.csv";
+        String csvDir = "";
         try {
             csvDir = args[0];
-        } catch (ArrayIndexOutOfBoundsException aiobe) {
+
+            // add to global variables (list and map)
+            FileService fs = new FileService();
+            listOfPokemonStacks = fs.ReadCSV(csvDir);
+            for (int i = 0; i < listOfPokemonStacks.size(); i++) {
+                List<String> pokemons = new ArrayList<>();
+                for (String pokemon : listOfPokemonStacks.get(i).split(",")) {
+                    pokemons.add(pokemon);
+                }
+                pokemonStacksMap.put(i, pokemons);
+            }
+
+            // Run Your Code here
+            boolean gameOn = true;
+
+            while (gameOn) {
+                clearConsole();
+                printHeader();
+                String selection = cons.readLine("Enter your selection >");
+                switch (selection.toLowerCase()) {
+                    case "1":
+                        // adjusted to allow users to select valid index based on original csv loaded size. cap at 8 to abide by test instructions
+                        int numOfStacks = pokemonStacksMap.size();
+                        if (numOfStacks > 8) {
+                            numOfStacks = 8;
+                        }
+                        String stackChoiceString = cons.readLine("Display the list of unique Pokemon in stack (1-" + numOfStacks + ") >\n");
+                        try {
+                            // check for valid selection
+                            int choice = Integer.parseInt(stackChoiceString);
+                            if (choice < 1 || choice > numOfStacks) {
+                                System.out.println("Please enter a valid number between 1 and " + numOfStacks + ".");
+                            }
+                            // valid selection
+                            else {
+                                printUniquePokemonStack(choice);
+                            }
+                        } catch (NumberFormatException nfe) {
+                            System.out.println("Error! Please enter a valid number between 1 and " + numOfStacks + ".");
+                        }
+                        pressAnyKeyToContinue();
+                        break;
+                    case "2":
+                        String pokemonToSearch = cons.readLine("Search for the next occurrence of 5 stars Pokemon in all stacks based on entered Pokemon >\n");
+                        printNext5StarsPokemon(pokemonToSearch);
+                        pressAnyKeyToContinue();
+                        break;
+                    case "3":
+                        String pokemonStackString = cons.readLine("Create a new Pokemon stack and save to a new file >\n");
+                        String filename = cons.readLine("Enter filename to save (e.g. path/filename.csv) >\n");
+                        savePokemonStack(pokemonStackString, filename);
+                        System.out.print("Saved successfully! ");
+                        pressAnyKeyToContinue();
+                        break;
+                    case "4":
+                        printPokemonCardCount();
+                        pressAnyKeyToContinue();
+                        break;
+                    case "q":
+                        printExitMessage();
+                        gameOn = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
             System.out.println("Error - please pass in csv filepath as command line argument.");
-        }
-        FileService fs = new FileService();
-
-        // add to global variables (list and map)
-        listOfPokemonStacks = fs.ReadCSV(csvDir);
-        for (int i = 0; i < listOfPokemonStacks.size(); i++) {
-            List<String> pokemons = new ArrayList<>();
-            for (String pokemon : listOfPokemonStacks.get(i).split(",")) {
-                pokemons.add(pokemon);
-            }
-            pokemonStacksMap.put(i, pokemons);
+        } catch (IOException ioe) {
+            System.out.println("Error - File not found!");
         }
 
-        // Run Your Code here
-        boolean gameOn = true;
-
-        while (gameOn) {
-            clearConsole();
-            printHeader();
-            String selection = cons.readLine("Enter your selection >");
-            switch (selection.toLowerCase()) {
-                case "1":
-                    String stackChoiceString = cons.readLine("Display the list of unique Pokemon in stack (1-8) >\n");
-                    try {
-                        // check for valid selection
-                        int choice = Integer.parseInt(stackChoiceString);
-                        if (choice < 1 || choice > 8) {
-                            System.out.println("Please enter a valid number between 1 and 8.");
-                        }
-                        // valid selection
-                        else {
-                            printUniquePokemonStack(choice);
-                        }
-                    } catch (NumberFormatException nfe) {
-                        System.out.println("Error! Please enter a valid number between 1 and 8.");
-                    }
-                    pressAnyKeyToContinue();
-                    break;
-                case "2":
-                    String pokemonToSearch = cons.readLine("Search for the next occurrence of 5 stars Pokemon in all stacks based on entered Pokemon >\n");
-                    printNext5StarsPokemon(pokemonToSearch);
-                    pressAnyKeyToContinue();
-                    break;
-                case "3":
-                    String pokemonStackString = cons.readLine("Create a new Pokemon stack and save to a new file >\n");
-                    String filename = cons.readLine("Enter filename to save (e.g. path/filename.csv) >\n");
-                    savePokemonStack(pokemonStackString, filename);
-                    System.out.print("Saved successfully! ");
-                    pressAnyKeyToContinue();
-                    break;
-                case "4":
-                    printPokemonCardCount();
-                    pressAnyKeyToContinue();
-                    break;
-                case "q":
-                    printExitMessage();
-                    gameOn = false;
-                    break;
-                default:
-                    break;
-            }
-        }
 
     }
 
@@ -198,6 +202,7 @@ public class App {
         int count = 1;
         for (Entry<String,Integer> entry : results) {
             System.out.println("Pokemon " + count + " : " + entry.getKey() + ", Cards Count: " + entry.getValue());
+            count++;
         }
     }
 
