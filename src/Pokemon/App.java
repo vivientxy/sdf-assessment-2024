@@ -1,12 +1,21 @@
-package Pokemon;
+package pokemon;
 
 import java.io.Console;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class App {
+    private static List<String> pokemonStack;
+    private static Map<Integer, List<String>> pokemonStacks;
 
     public static void main(String[] args) throws Exception {
         Console cons = System.console();
+
+        String csvDir = args[0];
+        FileService fs = new FileService();
+        fs.ReadCSV(csvDir);
+
         // Run Your Code here
         printHeader();
         String selection = cons.readLine("Enter your selection >");
@@ -26,10 +35,10 @@ public class App {
     // Task 1
     public static void printHeader() {
         System.out.println("Welcome to Pokemon Gaole Legend 4 Rush 2" + "\n\n"
-        + "(1) View unique list of Pokemon in the selected stack" + "\n"
-        + "(2) Find next 5 stars Pokemon occurrence" + "\n"
-        + "(3) Create new Pokemon stack and save (append) to csv file" + "\n"
-        + "(4) Print distinct Pokemon and cards count" + "\n"
+        + "(1) View the list of Pokemon in the selected stack" + "\n"
+        + "(2) View unique list of Pokemon in the selected stack and cards count" + "\n"
+        + "(3) Find next 5 stars Pokemon occurrence" + "\n"
+        + "(4) Create new Pokemon stack and save (append) to csv file" + "\n"
         + "(q) to exit the program");
     }
 
