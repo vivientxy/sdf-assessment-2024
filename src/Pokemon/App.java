@@ -63,17 +63,18 @@ public class App {
                     pressAnyKeyToContinue();
                     break;
                 case "2":
-
+                    String pokemonToSearch = cons.readLine("Search for the next occurrence of 5 stars Pokemon in all stacks based on entered Pokemon >\n");
+                    printNext5StarsPokemon(pokemonToSearch);
                     pressAnyKeyToContinue();
                     break;
                 case "3":
-
-                    pressAnyKeyToContinue();
-                    break;
-                case "4":
                     String pokemonStackString = cons.readLine("Create a new Pokemon stack and save to a new file >\n");
                     String filename = cons.readLine("Enter filename to save (e.g. path/filename.csv) >\n");
                     savePokemonStack(pokemonStackString, filename);
+                    break;
+                case "4":
+
+                    pressAnyKeyToContinue();
                     break;
                 case "q":
                     printExitMessage();
@@ -100,10 +101,10 @@ public class App {
     // Task 1
     public static void printHeader() {
         System.out.println("Welcome to Pokemon Gaole Legend 4 Rush 2" + "\n\n"
-                + "(1) View the list of Pokemon in the selected stack" + "\n"
-                + "(2) View unique list of Pokemon in the selected stack and cards count" + "\n"
-                + "(3) Find next 5 stars Pokemon occurrence" + "\n"
-                + "(4) Create new Pokemon stack and save (append) to csv file" + "\n"
+                + "(1) View unique list of Pokemon in the selected stack" + "\n"
+                + "(2) Find next 5 stars Pokemon occurrence" + "\n"
+                + "(3) Create new Pokemon stack and save (append) to csv file" + "\n"
+                + "(4) Print distinct Pokemon and cards count" + "\n"
                 + "(q) to exit the program");
     }
 
@@ -135,8 +136,40 @@ public class App {
 
     // Task 2
     public static void printNext5StarsPokemon(String enteredPokemon) {
-        // Task 2 - your code here
+        for (int i = 0; i < listOfPokemonStacks.size(); i++) {
+            System.out.println("Set " + (i+1));
 
+            List<String> pokemonArray = new ArrayList<>();
+            for (String pokemon : listOfPokemonStacks.get(i).split(",")) {
+                pokemonArray.add(pokemon);
+            }
+
+            int index = pokemonArray.indexOf(enteredPokemon);
+            if (index == -1) {
+                // entered pokemon does not exist
+                System.out.println(enteredPokemon + " not found in this set.");
+            } else {
+                // entered pokemon exists, search for subsequent 5*
+                boolean hasSubsequent5Stars = false;
+                int fiveStarsIndex = -1;
+
+                for (int j = index; j < pokemonArray.size(); j++) {
+                    if (pokemonArray.get(j).contains("5*")) {
+                        // 5* exists after entered pokemon
+                        hasSubsequent5Stars = true;
+                        fiveStarsIndex = j;
+                        break; // break so we get the first subsequent 5* pokemon instead of the last
+                    }
+                }
+                
+                if (hasSubsequent5Stars) {
+                    System.out.println(pokemonArray.get(fiveStarsIndex) + ">>>" + (fiveStarsIndex-index) + " cards to go.");
+                } else {
+                    System.out.println("No 5 stars Pokemon found subsequently in the stack.");
+                }
+
+            }
+        }
     }
 
     // Task 2
