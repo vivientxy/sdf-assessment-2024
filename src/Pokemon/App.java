@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class App {
     public static List<String> listOfPokemonStacks = new ArrayList<>();
@@ -71,9 +73,11 @@ public class App {
                     String pokemonStackString = cons.readLine("Create a new Pokemon stack and save to a new file >\n");
                     String filename = cons.readLine("Enter filename to save (e.g. path/filename.csv) >\n");
                     savePokemonStack(pokemonStackString, filename);
+                    System.out.print("Saved successfully! ");
+                    pressAnyKeyToContinue();
                     break;
                 case "4":
-
+                    printPokemonCardCount();
                     pressAnyKeyToContinue();
                     break;
                 case "q":
@@ -122,7 +126,7 @@ public class App {
 
     // Task 2
     public static void printUniquePokemonStack(Integer stack) {
-        List<String> pokemons = pokemonStacksMap.get(stack);
+        List<String> pokemons = pokemonStacksMap.get(stack-1);
         Set<String> uniquePokemons = new HashSet<>();
         for (String pokemon : pokemons) {
             uniquePokemons.add(pokemon);
@@ -161,7 +165,7 @@ public class App {
                         break; // break so we get the first subsequent 5* pokemon instead of the last
                     }
                 }
-                
+
                 if (hasSubsequent5Stars) {
                     System.out.println(pokemonArray.get(fiveStarsIndex) + ">>>" + (fiveStarsIndex-index) + " cards to go.");
                 } else {
@@ -174,7 +178,27 @@ public class App {
 
     // Task 2
     public static void printPokemonCardCount() {
-        // Task 2 - your code here
+        // get pokemon count
+        Map<String,Integer> pokemonCount = new HashMap<>();
+
+        for (int i = 0; i < listOfPokemonStacks.size(); i++) {
+            String[] pokemonList = listOfPokemonStacks.get(i).split(",");
+            for (String pokemon : pokemonList) {
+                if (pokemonCount.containsKey(pokemon)) {
+                    int count = pokemonCount.get(pokemon) + 1;
+                    pokemonCount.put(pokemon, count);
+                } else {
+                    pokemonCount.put(pokemon, 1);
+                }
+            }
+        }
+
+        // sort by integer count, and print out top occurrences
+        List<Entry<String, Integer>> results = pokemonCount.entrySet().stream().sorted((w0,w1) -> w1.getValue() - w0.getValue()).limit(10).collect(Collectors.toList());
+        int count = 1;
+        for (Entry<String,Integer> entry : results) {
+            System.out.println("Pokemon " + count + " : " + entry.getKey() + ", Cards Count: " + entry.getValue());
+        }
     }
 
 }
