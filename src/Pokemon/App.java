@@ -2,21 +2,40 @@ package pokemon;
 
 import java.io.Console;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class App {
-    private static List<String> currentStack;
-    private static Map<Integer, List<String>> pokemonStacks;
+    public static List<String> listOfPokemonStacks = new ArrayList<>();
+    public static Map<Integer, List<String>> pokemonStacksMap = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         Console cons = System.console();
 
-        // String csvDir = args[0];
-        // FileService fs = new FileService();
-        // fs.ReadCSV(csvDir);
-
         // try-catch exceptions instead of throw!
+
+        // to fix this -- terminate program if no filepath is passed in command line argument
+        String csvDir = "Rush2.csv";
+        try {
+            csvDir = args[0];
+        } catch (ArrayIndexOutOfBoundsException aiobe) {
+            System.out.println("Error - please pass in csv filepath as command line argument.");
+        }
+        FileService fs = new FileService();
+
+        // add to global variables (list and map)
+        listOfPokemonStacks = fs.ReadCSV(csvDir);
+        for (int i = 0; i < listOfPokemonStacks.size(); i++) {
+            List<String> pokemons = new ArrayList<>();
+            for (String pokemon : listOfPokemonStacks.get(i).split(",")) {
+                pokemons.add(pokemon);
+            }
+            pokemonStacksMap.put(i, pokemons);
+        }
 
         // Run Your Code here
         boolean gameOn = true;
@@ -102,7 +121,16 @@ public class App {
 
     // Task 2
     public static void printUniquePokemonStack(Integer stack) {
-        // Task 2 - your code here
+        List<String> pokemons = pokemonStacksMap.get(stack);
+        Set<String> uniquePokemons = new HashSet<>();
+        for (String pokemon : pokemons) {
+            uniquePokemons.add(pokemon);
+        }
+        int counter = 1;
+        for (String pokemon : uniquePokemons) {
+            System.out.println(counter + " ==> " + pokemon);
+            counter++;
+        }
     }
 
     // Task 2
